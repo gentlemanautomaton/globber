@@ -1,6 +1,6 @@
-// Package globber facilitates the use of glob-style pattern matching for
-// configuration. It provides concrete types that are serializable as JSON and
-// can be used as flag variables via flag.Var()
+// Package globber facilitates glob-style pattern matching for configuration.
+// It provides concrete types that are serializable as JSON and usable as flags
+// via flag.Var()
 //
 // This is a small package that provides some convenient wrappers. The
 // hard work is performed by Sergey Kamardin's glob package, available here:
