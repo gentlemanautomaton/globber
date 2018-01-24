@@ -8,7 +8,7 @@ import (
 // Separator is the delimiter used when converting sets to and from strings.
 const Separator = ','
 
-// Set is a set of globs.
+// Set is a slice of globs.
 type Set []Glob
 
 // NewSet returns a set of globs for the given pattern. Commas and
@@ -44,8 +44,10 @@ func (s Set) Match(value string) bool {
 	return false
 }
 
-// Set applies the given value or pattern to s. It assumes that values are
-// delimited by whitespace or commas.
+// Set applies the given value or pattern to s. It facilities use in the flag
+// package.
+//
+// Set assumes that values are delimited by whitespace or commas.
 func (s *Set) Set(values string) error {
 	*s = Split(values)
 	return nil
