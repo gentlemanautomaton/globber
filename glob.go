@@ -36,7 +36,7 @@ func (g Glob) Match(value string) bool {
 	return false
 }
 
-// Set applies the given value or pattern to g. It facilities use in the flag
+// Set applies the given value or pattern to g. It facilitates use in the flag
 // package.
 func (g *Glob) Set(value string) error {
 	g.literal = value

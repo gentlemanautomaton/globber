@@ -44,7 +44,7 @@ func (s Set) Match(value string) bool {
 	return false
 }
 
-// Set applies the given value or pattern to s. It facilities use in the flag
+// Set applies the given value or pattern to s. It facilitates use in the flag
 // package.
 //
 // Set assumes that values are delimited by whitespace or commas.
