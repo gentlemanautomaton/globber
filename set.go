@@ -44,6 +44,17 @@ func (s Set) Match(value string) bool {
 	return false
 }
 
+// MatchInsensitive returns true if any member of the set case-insensitively
+// matches the given value.
+func (s Set) MatchInsensitive(value string) bool {
+	for i := range s {
+		if s[i].MatchInsensitive(value) {
+			return true
+		}
+	}
+	return false
+}
+
 // Set applies the given value or pattern to s. It facilitates use in the flag
 // package.
 //

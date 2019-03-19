@@ -2,6 +2,7 @@ package globber
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/gobwas/glob"
 )
@@ -9,7 +10,8 @@ import (
 // Glob matches string literals and glob patterns.
 type Glob struct {
 	literal string
-	glob    glob.Glob
+	exact   glob.Glob
+	lowered glob.Glob
 }
 
 // New returns a glob for the given string literal or pattern.
@@ -17,10 +19,12 @@ type Glob struct {
 // If value cannot be compiled as a pattern, the result will only match
 // literal values.
 func New(value string) Glob {
-	g, _ := glob.Compile(value)
+	exact, _ := glob.Compile(value)
+	lowered, _ := glob.Compile(strings.ToLower(value))
 	return Glob{
 		literal: value,
-		glob:    g,
+		exact:   exact,
+		lowered: lowered,
 	}
 }
 
@@ -30,8 +34,20 @@ func (g Glob) Match(value string) bool {
 	if g.literal == value {
 		return true
 	}
-	if g.glob != nil {
-		return g.glob.Match(value)
+	if g.exact != nil {
+		return g.exact.Match(value)
+	}
+	return false
+}
+
+// MatchInsensitive returns true if the glob case-insensitively matches the
+// given value exactly or as a pattern match.
+func (g Glob) MatchInsensitive(value string) bool {
+	if strings.EqualFold(g.literal, value) {
+		return true
+	}
+	if g.lowered != nil {
+		return g.lowered.Match(strings.ToLower(value))
 	}
 	return false
 }
@@ -40,7 +56,8 @@ func (g Glob) Match(value string) bool {
 // package.
 func (g *Glob) Set(value string) error {
 	g.literal = value
-	g.glob, _ = glob.Compile(value)
+	g.exact, _ = glob.Compile(value)
+	g.lowered, _ = glob.Compile(strings.ToLower(value))
 	return nil
 }
 
@@ -59,6 +76,7 @@ func (g *Glob) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &g.literal); err != nil {
 		return err
 	}
-	g.glob, _ = glob.Compile(g.literal)
+	g.exact, _ = glob.Compile(g.literal)
+	g.lowered, _ = glob.Compile(strings.ToLower(g.literal))
 	return nil
 }
